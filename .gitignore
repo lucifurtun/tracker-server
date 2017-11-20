@@ -1,0 +1,11 @@
+.idea*
+*.pyc
+__pycache__
+.DS_Store
+*.sqlite3
+*.sqlite
+backup/
+node_modules/
+webpack-stats.json
+ui/js/bundles/
+project/local.py
