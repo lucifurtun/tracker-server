@@ -81,6 +81,32 @@ DATABASES = {
     }
 }
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'parking.position': {
+            'format': '[%(asctime)s] %(message)s',
+        }
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+        'tracking.position': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'parking.position'
+        },
+    },
+    'loggers': {
+        'tracking.position': {
+            'handlers': ['tracking.position'],
+            'level': 'INFO',
+        },
+    }
+}
+
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
 
