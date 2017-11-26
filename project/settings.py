@@ -84,7 +84,7 @@ WSGI_APPLICATION = 'project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3')
     }
 }
 
@@ -153,7 +153,7 @@ STATIC_URL = '/static/'
 AUTH_USER_MODEL = 'user.User'
 
 GRAPHENE = {
-    'SCHEMA': 'schema.schema'
+    'SCHEMA': 'project.schema.schema'
 }
 
 try:
