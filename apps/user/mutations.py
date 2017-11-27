@@ -8,12 +8,12 @@ class LogIn(graphene.Mutation):
     user = graphene.Field(UserNode)
 
     class Arguments:
-        username = graphene.String()
+        email = graphene.String()
         password = graphene.String()
 
     @classmethod
-    def mutate(cls, root, info, username, password):
-        user = authenticate(username=username, password=password)
+    def mutate(cls, root, info, email, password):
+        user = authenticate(username=email, password=password)
 
         if user is None:
             raise Exception('Please enter a correct phone and password')

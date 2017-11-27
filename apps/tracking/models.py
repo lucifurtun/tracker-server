@@ -8,7 +8,7 @@ class Device(models.Model):
 
 
 class Position(models.Model):
-    device = models.ForeignKey(Device)
+    device = models.ForeignKey(Device, related_name='positions')
 
     time_sent = models.DateTimeField(null=True, blank=True)
     time_received = models.DateTimeField(auto_now_add=True)
