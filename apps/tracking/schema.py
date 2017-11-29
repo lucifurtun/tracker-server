@@ -1,14 +1,13 @@
 import graphene
+from graphene import ObjectType
 from graphene_django import DjangoObjectType
 
-from apps.tracking import models, utils
+from apps.tracking import models
 
 
 class DeviceType(DjangoObjectType):
     class Meta:
         model = models.Device
-        # interfaces = (graphene.relay.Node,)
-        # only_fields = ('id', 'pk', 'serial_number')
 
 
 class PositionType(DjangoObjectType):
@@ -16,10 +15,10 @@ class PositionType(DjangoObjectType):
         model = models.Position
 
 
-class Query(object):
+class Query(ObjectType):
     device = category = graphene.Field(DeviceType, id=graphene.Int(), serial_number=graphene.String())
     devices = graphene.List(DeviceType)
-    positions = graphene.List(PositionType)
+    positions = graphene.List(PositionType, device_id=graphene.Int())
 
     def resolve_device(self, info, **kwargs):
         id = kwargs.get('id')
@@ -34,9 +33,23 @@ class Query(object):
         return None
 
     def resolve_devices(self, info, **kwargs):
-        filters = utils.get_current_user_filter(info.context.user)
+        filters = {}
+        if info.context.user.is_authenticated():
+            filters['user_id'] = info.context.user
+        else:
+            models.Device.objects.none()
+
         return models.Device.objects.filter(**filters)
 
     def resolve_positions(self, info, **kwargs):
-        filters = utils.get_current_user_filter(info.context.user)
+        filters = {}
+        if info.context.user.is_authenticated():
+            filters['device__user_id'] = info.context.user
+        else:
+            return models.Position.objects.none()
+
+        device_id = kwargs.get('device_id')
+        if device_id is not None:
+            filters['device_id'] = device_id
+
         return models.Position.objects.filter(**filters)
