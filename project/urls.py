@@ -16,10 +16,12 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import RedirectView
 
 from apps.common.views import CustomGraphQLView
 
 urlpatterns = [
+    url(r'^$', RedirectView.as_view(pattern_name='graphql')),
     url(r'^admin/', admin.site.urls),
-    url(r'^graphql/', csrf_exempt(CustomGraphQLView.as_view(graphiql=True))),
+    url(r'^graphql/$', csrf_exempt(CustomGraphQLView.as_view(graphiql=True)), name='graphql'),
 ]
