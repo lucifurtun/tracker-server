@@ -1,18 +1,19 @@
 import graphene
 from graphene import ObjectType
 from graphene_django import DjangoObjectType
-
 from apps.tracking import models
-
-
-class DeviceType(DjangoObjectType):
-    class Meta:
-        model = models.Device
 
 
 class PositionType(DjangoObjectType):
     class Meta:
         model = models.Position
+
+
+class DeviceType(DjangoObjectType):
+    latest_position = graphene.Field(PositionType)
+
+    class Meta:
+        model = models.Device
 
 
 class Query(ObjectType):
