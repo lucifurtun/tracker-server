@@ -10,7 +10,7 @@ class PositionType(DjangoObjectType):
 
 
 class DeviceType(DjangoObjectType):
-    latest_position = graphene.Field(PositionType)
+    last_position = graphene.Field(PositionType)
 
     class Meta:
         model = models.Device

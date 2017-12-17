@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'channels',
     'graphene_django',
 
     'apps.user',
@@ -154,6 +155,13 @@ AUTH_USER_MODEL = 'user.User'
 
 GRAPHENE = {
     'SCHEMA': 'project.schema.schema'
+}
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "asgi_redis.RedisChannelLayer",
+        "ROUTING": "project.routing.channel_routing",
+    },
 }
 
 try:

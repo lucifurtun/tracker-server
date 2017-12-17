@@ -1,5 +1,8 @@
+import json
 import logging
+import struct
 
+from channels import Group
 from django.core.management.base import BaseCommand
 from paho.mqtt import client as mqtt
 from paho.mqtt.client import MQTTMessage
@@ -13,6 +16,7 @@ class Command(BaseCommand):
     help = 'Subscribe to MQTT broker'
 
     def handle(self, *args, **options):
+        Group("tracking").send({"text": json.dumps({'lat': 11, 'lng': 22})}, immediately=True)
         client = mqtt.Client()
         client.on_connect = on_connect
         client.on_message = on_message
@@ -32,7 +36,13 @@ def on_connect(client, userdata, flags, rc):
 
 
 def on_message(client, userdata, msg: MQTTMessage):
-    device = models.Device.objects.get(serial_number='12345')
-    position = models.Position.objects.create(lat=45.7494493, lng=21.2312252, device=device)
+    payload = list(msg.payload)
+    lat, = struct.unpack('!d', bytes(payload[0:8]))
+    lng, = struct.unpack('!d', bytes(payload[9:17]))
 
-    logger.info('POSITION RECEIVED: (%s, %s)', position.lat, position.lng)
+    device = models.Device.objects.get(serial_number='12345')
+    position = models.Position.objects.create(lat=lat, lng=lng, device=device)
+
+    logger.info('POSITION RECEIVED: (%s, %s)', lat, lng)
+
+    Group("tracking").send({"text": json.dumps({'lat': lat, 'lng': lng})}, immediately=True)
